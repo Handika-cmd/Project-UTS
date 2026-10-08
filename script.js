@@ -1,67 +1,73 @@
-const formBuku = document.getElementById("form-buku");
-const inputJudul = document.getElementById("judul");
-const inputPenulis = document.getElementById("penulis");
-const inputTahun = document.getElementById("tahun");
-const simpan = document.getElementById("btn-simpan");
-const tabel = document.getElementById("tabel-buku");
-const notif = document.getElementById("notif");
+// Kita siapkan array kosong buat nampung data bukunya
+let daftarKoleksiBuku = [];
 
-let daftarBuku = [];
+// Ambil elemen form, input, dan tabel
+const formBuku = document.getElementById('form-buku');
+const inputJudul = document.getElementById('judul');
+const inputPenulis = document.getElementById('penulis');
+const inputTahun = document.getElementById('tahun');
+const tabelBuku = document.getElementById('tabel-buku');
 
-// ===== BLOK 4: Fungsi untuk menampilkan data ke tabel (Saran Deklarasi dulu buat defenisi fungsi) =====
-function renderTabel(){
-    // 1. Kosongkan dulu isi tabel (biar nggak dobel)
-    tabel.innerHTML = "";
-    // 2. Loop setiap buku di array (materi Hari 7: Loop)
-    for (i =0; i < daftarBuku.length; i++){
-        const buku = daftarBuku[i];
-    
-    // 3. Bikin elemen baris <tr> baru
-    const baris = document.createElement("tr");
-    baris.className = "hover:bg-gray-50";
+// Event pas tombol Simpan Buku diklik
+formBuku.addEventListener('submit', function(e) {
+  e.preventDefault(); // Cegah reload halaman
 
-    // 4. Isi baris dengan sel <td> berisi data buku
-    baris.innerHTML = 
-    '<td class="font-medium p-3">' + buku.judul + "</td>" +
-    '<td class="p-3 text-center">' + buku.penulis + "</td>" +
-    '<td class="p-3 text-center">' + buku.tahun + "</td>" +
-    '<td class="p-3 text-center">Belum ada input</td>' +
-    '<td class="p-3 text-center">Belum ada input</td>'
-    // 5. Tempelkan baris ke dalam tabel
-    tabel.appendChild(baris);
-    }
-};
+  // 1. Masukin data input ke bentuk Object (Materi Hari 10)
+  const bukuBaru = {
+    judul: inputJudul.value,
+    penulis: inputPenulis.value,
+    tahun: inputTahun.value
+  };
 
-// Mengaktifkan tombol Submmit di formBuku
-formBuku.addEventListener("submit", function(event){
+  // 2. Masukin object bukuBaru ke dalam Array pake .push() (Materi Hari 9)
+  daftarKoleksiBuku.push(bukuBaru);
 
-    event.preventDefault();
+  // 3. Simpan Array ke localStorage dalam bentuk String JSON (Materi Hari 15 & 16)
+  // JSON.stringify dipake karena localStorage nggak bisa langsung nyimpen Array/Object
+  localStorage.setItem('dataBuku', JSON.stringify(daftarKoleksiBuku));
 
-    // 1. Ambil isi ketikan user dari tiap input
-    const judul = inputJudul.value;
-    const penulis = inputPenulis.value;
-    const tahun = inputTahun.value;
+  // 4. Kosongkan kotak input biar siap ngetik lagi
+  inputJudul.value = '';
+  inputPenulis.value = '';
+  inputTahun.value = '';
+  inputJudul.focus();
 
-    // 2. Bungkus jadi satu object buku
-    const dataBaru = {
-        judul: judul,
-        penulis: penulis,
-        tahun: tahun
-    };
-    // 3. Masukkan ke array daftarBuku
-    daftarBuku.push(dataBaru);
-    // 4. Tampilkan ulang isi tabel (fungsi ini kita bikin di Blok 4)
-    renderTabel();
-
-    // 5. Kosongkan form biar bisa input buku berikutnya
-    formBuku.reset();
-
-        // === Notifikasi muncul ===
-    notif.classList.remove("hidden");
-    notif.textContent = "Buku berhasil ditambah!";
-
-    // Hilang otomatis setelah 3 detik
-    setTimeout(() => {
-      notif.classList.add("hidden");
-    }, 3000);
+  // PANGGIL FUNGSI UNTUK TAMPILKAN KE LAYAR (Di blok 2 nanti)
+  tampilkanBuku();
 });
+
+// Fungsi buat nampilin daftar buku ke layar
+function tampilkanBuku() {
+  // Kosongin dulu isi tabel biar nggak dobel nambahnya
+  tabelBuku.innerHTML = '';
+
+  // Looping array pake .map() (Materi Hari 11 - Array Iteration)
+  daftarKoleksiBuku.map(function(buku, index) {
+    // Bikin elemen baris baru
+    const barisBaru = document.createElement('tr');
+    barisBaru.className = 'text-center hover:bg-gray-50';
+    
+    // Masukin data ke kolom <td>
+    barisBaru.innerHTML = `
+      <td class="p-3">${buku.judul}</td>
+      <td class="p-3">${buku.penulis}</td>
+      <td class="p-3">${buku.tahun}</td>
+      <td class="p-3"></td>
+      <td class="p-3">
+        <button class="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600">Hapus</button>
+      </td>
+    `;
+
+    // Tempel barisnya ke tbody
+    tabelBuku.appendChild(barisBaru);
+  });
+}
+
+// Saat halaman pertama kali dimuat / direfresh
+if (localStorage.getItem('dataBuku')) {
+  // Ambil data string dari localStorage, ubah balik jadi Array pake JSON.parse
+  daftarKoleksiBuku = JSON.parse(localStorage.getItem('dataBuku'));
+  
+  // Langsung tampilkan data lama tadi ke tabel
+  tampilkanBuku();
+}
