@@ -18,7 +18,7 @@ function renderTabel(){
     
     // 3. Bikin elemen baris <tr> baru
     const baris = document.createElement("tr");
-    baris.className = "hover:bg-green-50";
+    baris.className = "hover:bg-gray-50";
 
     // 4. Isi baris dengan sel <td> berisi data buku
     baris.innerHTML = 
@@ -32,7 +32,7 @@ function renderTabel(){
     }
 };
 
-// Mengaktifkan tombol Submmit
+// Mengaktifkan tombol Submmit di formBuku
 formBuku.addEventListener("submit", function(event){
 
     event.preventDefault();
@@ -43,17 +43,15 @@ formBuku.addEventListener("submit", function(event){
     const tahun = inputTahun.value;
 
     // 2. Bungkus jadi satu object buku
-    const bukuBaru = {
+    const dataBaru = {
         judul: judul,
         penulis: penulis,
         tahun: tahun
     };
-
     // 3. Masukkan ke array daftarBuku
-    daftarBuku.push(bukuBaru);
-
+    daftarBuku.push(dataBaru);
     // 4. Tampilkan ulang isi tabel (fungsi ini kita bikin di Blok 4)
-    renderTabel()
+    renderTabel();
 
     // 5. Kosongkan form biar bisa input buku berikutnya
     formBuku.reset();
