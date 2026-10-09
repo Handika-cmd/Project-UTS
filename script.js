@@ -43,7 +43,7 @@ function tampilkanBuku(){
       <td class="p-3">${buku.tahun}</td>
       <td class="p-3"></td>
       <td class="p-3">
-        <button class="p-3 bg-red-500 text-white px-3 py-2 rounded hover:bg-red-700">Hapus</button>
+        <button data-index ="${index}" class="btn-hapus p-3 bg-red-500 text-white px-3 py-2 rounded hover:bg-red-700">Hapus</button>
       </td>
     `
 
@@ -56,3 +56,19 @@ if (localStorage.getItem("dataBuku")){
   daftarKoleksiBuku = JSON.parse(localStorage.getItem("dataBuku"));
   tampilkanBuku();
 }
+
+// BLOK 4: Ngasih Identitas Baris & Nangkap Klik (Materi DOM Atributes & Event Bubbling)
+
+// Langkah 1: edit dikit fungsi tampilkanBuku() di blok 2
+// Langkah 2: Bikin Event listener baru di luar fungsi tampilkanBuku()
+tabelBuku.addEventListener("click", function(e){
+
+  if (e.target.classList.contains('btn-hapus')){
+
+    const indexBuku = e.target.getAttribute("data-index");
+    daftarKoleksiBuku.splice(indexBuku, 1);
+
+    localStorage.setItem("dataBuku", JSON.stringify(daftarKoleksiBuku));
+    tampilkanBuku()
+  }
+});
