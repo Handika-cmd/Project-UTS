@@ -15,7 +15,8 @@ formBuku.addEventListener("submit", function(event){
   const bukuBaru ={
     judul: inputJudul.value,
     penulis: inputPenulis.value,
-    tahun: inputTahun.value
+    tahun: inputTahun.value,
+    status: "Tersedia"
   }
 
   daftarKoleksiBuku.push(bukuBaru);
@@ -37,13 +38,22 @@ function tampilkanBuku(){
     const barisBaru = document.createElement("tr");
     barisBaru.className = "text-center hover:bg-gray-50";
 
+    let warnaStatus = '';
+
+    if (buku.status === "Tersedia"){
+      warnaStatus = 'text-green-600 font-semibold';
+    }else{
+      warnaStatus = 'text-red-600 font-semibold';
+    }
+
     barisBaru.innerHTML =`
-      <td class="p-3 font-medium">${buku.judul}</td>
+      <td class="p-3">${buku.judul}</td>
       <td class="p-3">${buku.penulis}</td>
       <td class="p-3">${buku.tahun}</td>
+      <td class="p-3 ${warnaStatus}">${buku.status}</td>
       <td class="p-3"></td>
       <td class="p-3">
-        <button data-index ="${index}" class="btn-hapus p-3 bg-red-500 text-white px-3 py-2 rounded hover:bg-red-700">Hapus</button>
+        <button data-index ="${index}" class="btn-hapus px-3 bg-red-500 text-white py-2 rounded hover:bg-red-700">Hapus</button>
       </td>
     `
 
